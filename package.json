@@ -1,0 +1,19 @@
+{
+  "name": "annotations_display_manager",
+  "version": "1.0.0",
+  "description": "The purpose of this exercise is to write an efficient algorithm that decides whether to show or hide an annotation as interactive content plays. An annotation may be a highlighted area, a text overlay, or a prompt to the user to take an action.",
+  "main": "src/display-manager.js",
+  "scripts": {
+    "start": "babel-node src/player.js",
+    "update": "babel-node src/player.js currentTime=2.0",
+    "test": "jest"
+  },
+  "author": "Noah Jablonski",
+  "devDependencies": {
+    "@babel/core": "^7.16.10",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
+    "babel-jest": "^27.4.6",
+    "jest": "^27.4.7"
+  }
+}
