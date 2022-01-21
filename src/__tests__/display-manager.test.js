@@ -6,7 +6,7 @@ import {
     getNextAnnotation,
     findAnnotation,
     getFirstAnnotationStartTime,
-    getLastAnnotationStartTime
+    getLastAnnotationEndTime
 } from '../display-manager.js';
 
 import { staticTracks } from '../../data/tracks.js';
@@ -31,24 +31,6 @@ describe('DisplayManager', () => {
         
             expect(annotationToHide.startTime).toEqual(expectedAnnotation.startTime);
             expect(annotationToHide.endTime).toBe(expectedAnnotation.endTime);
-        });
-    });
-
-    describe('getFirstAnnotationStartTime', () => {
-        test('finds the start time of the very first annotation in a series of tracks', () => {
-            const startTime = getFirstAnnotationStartTime(staticTracks);
-            const expectedAnnotation = staticTracks[0][0];
-    
-            expect(startTime).toEqual(expectedAnnotation.startTime);
-        });
-    });
-
-    describe('getLastAnnotationStartTime', () => {
-        test('finds the start time of the very first annotation in a series of tracks', () => {
-            const endTime = getLastAnnotationStartTime(staticTracks);
-            const expectedAnnotation = staticTracks[3][1];
-    
-            expect(endTime).toEqual(expectedAnnotation.endTime);
         });
     });
 
@@ -97,6 +79,24 @@ describe('DisplayManager', () => {
             const expectedAnnotation = staticTracks[0][0];
 
             expect(currentAnnotation).toEqual(expectedAnnotation);
+        });
+    });
+
+    describe('getFirstAnnotationStartTime', () => {
+        test('finds the start time of the very first annotation in a series of tracks', () => {
+            const startTime = getFirstAnnotationStartTime(staticTracks);
+            const expectedAnnotation = staticTracks[0][0];
+    
+            expect(startTime).toEqual(expectedAnnotation.startTime);
+        });
+    });
+
+    describe('getLastAnnotationEndTime', () => {
+        test('finds the start time of the very first annotation in a series of tracks', () => {
+            const endTime = getLastAnnotationEndTime(staticTracks);
+            const expectedAnnotation = staticTracks[3][1];
+            
+            expect(endTime).toEqual(expectedAnnotation.endTime);
         });
     });
 });

@@ -37,19 +37,20 @@ We do this by splitting the tracks in 2, and then identifying
 whether we should search to the left or right.
 */
 const findTrack = (currentTime, tracks) => {
+    const tracksToSearch = tracks.slice();
     let start = 0;
-    let end = tracks.length - 1;
+    let end = tracksToSearch.length - 1;
 
     while (start <= end) {
         let middle = Math.floor((start + end) / 2);
 
-        const currentTrack = tracks[middle];
+        const currentTrack = tracksToSearch[middle];
         const firstAnnotation = currentTrack && currentTrack[0];
         const lastAnnotation = currentTrack && currentTrack[currentTrack.length - 1];
 
         // If the track doesn't have an annotation, we want to exclude it from the search
         if (!firstAnnotation && !lastAnnotation) {
-            tracks.splice(middle, 1);
+            tracksToSearch.splice(middle, 1);
 
             continue;
         }
@@ -58,7 +59,7 @@ const findTrack = (currentTime, tracks) => {
         if (currentTime >= firstAnnotation.startTime && currentTime <= lastAnnotation.endTime) {
             return {
                 currentTrack,
-                nextTrack: getNextTrack(tracks, middle)
+                nextTrack: getNextTrack(tracksToSearch, middle)
             };
         }
         // search right
@@ -134,11 +135,11 @@ const getFirstAnnotationStartTime = (tracks) => {
     }
 };
 
-const getLastAnnotationStartTime = (tracks) => {
+const getLastAnnotationEndTime = (tracks) => {
     if (tracks) {
         const firstApplicableTrack = tracks.slice().reverse().find(track => track.length);
         const firstApplicableAnnotation = firstApplicableTrack.slice().reverse().find(annotation => annotation.endTime);
-    
+
         return firstApplicableAnnotation.endTime;
     }
 };
@@ -154,7 +155,7 @@ class DisplayManager {
         this.nextAnnotation = this.currentTrack;
 
         this.firstAnnotationStartTime = getFirstAnnotationStartTime(this.tracks);
-        this.lastAnnotationStartTime = getLastAnnotationStartTime(this.tracks);
+        this.lastAnnotationStartTime = getLastAnnotationEndTime(this.tracks);
 
         this.currentAnnotationVisible = false;
     }
@@ -233,7 +234,7 @@ class DisplayManager {
         if we're already in the appropriate track to avoid a needless search.
         */
         if (continueSearch && !inTrack(currentTime, this.currentTrack)) {
-            const { currentTrack, nextTrack } = findTrack(currentTime, [...this.tracks]);
+            const { currentTrack, nextTrack } = findTrack(currentTime, this.tracks);
 
             logSearchLevels('4 (find a new track)', LOG_SEARCH_LEVELS);
 
@@ -278,5 +279,5 @@ export {
     getNextAnnotation,
     findAnnotation,
     getFirstAnnotationStartTime,
-    getLastAnnotationStartTime
+    getLastAnnotationEndTime
 };
