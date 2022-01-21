@@ -16,7 +16,9 @@ const inTrack = (currentTime, currentTrack) => {
         const firstAnnotation = currentTrack[0];
         const lastAnnotation = currentTrack[currentTrack.length - 1];
 
-        return currentTime >= firstAnnotation.startTime && currentTime <= lastAnnotation.endTime;
+        if (firstAnnotation && lastAnnotation) {
+            return currentTime >= firstAnnotation.startTime && currentTime <= lastAnnotation.endTime;
+        }
     }
 
     return false;
@@ -95,7 +97,7 @@ Use a simple binary search to identify the closest annotation.
 We do this by splitting the annotation in 2, and then identifying
 whether we should search to the left or right.
 */
-const findAnnotation = (currentTime, currentTrack, nextTrack) => {
+const findAnnotation = (currentTime, currentTrack, nextTrack, currentAnnotation) => {
     if (currentTrack) {
         let start = 0;
         let end = currentTrack.length - 1;
@@ -103,17 +105,24 @@ const findAnnotation = (currentTime, currentTrack, nextTrack) => {
         while (start <= end) {
             let middle = Math.floor((start + end) / 2);
 
-            const currentAnnotation = currentTrack[middle];
+            const newAnnotation = currentTrack[middle];
+
+            // If the annotation is currently set, we want to exclude it from the search
+            if (currentAnnotation === newAnnotation) {
+                currentTrack.splice(middle, 1);
+
+                continue;
+            }
 
             // match found
-            if (currentTime >= currentAnnotation.startTime && currentTime <= currentAnnotation.endTime) {
+            if (newAnnotation && currentTime >= newAnnotation.startTime && currentTime <= newAnnotation.endTime) {
                 return {
-                    currentAnnotation,
+                    currentAnnotation: newAnnotation,
                     nextAnnotation: getNextAnnotation(currentTrack, nextTrack, middle)
                 };
             }
             // search right
-            else if (currentTime > currentAnnotation.endTime) {
+            else if (newAnnotation && currentTime > newAnnotation.endTime) {
                 start = middle + 1;
             }
             // search left
@@ -163,8 +172,8 @@ class DisplayManager {
     timeUpdate (currentTime) {
         const { annotationToShow, annotationToHide } = this.searchForAnnotations(currentTime);
 
-        if (annotationToShow.show) annotationToShow.show();
         if (annotationToHide.hide) annotationToHide.hide();
+        if (annotationToShow.show) annotationToShow.show();
     }
 
     /*
@@ -247,7 +256,7 @@ class DisplayManager {
         Step 5 - We only search for an annotation if we're inside a track.
         */
         if (continueSearch && this.currentTrack) {
-            const { currentAnnotation, nextAnnotation } = findAnnotation(currentTime, this.currentTrack, this.nextTrack);
+            const { currentAnnotation, nextAnnotation } = findAnnotation(currentTime, this.currentTrack, this.nextTrack, this.currentAnnotation);
 
             logSearchLevels('5 (find a new annotation)', LOG_SEARCH_LEVELS);
 
@@ -263,7 +272,7 @@ class DisplayManager {
                 annotationToShow = { ...this.currentAnnotation };
             }
         }
-
+        
         return {
             annotationToShow,
             annotationToHide

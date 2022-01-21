@@ -27,12 +27,17 @@ const formatTrackData = (trackData) => {
 const staticTracks = (() => {
     const trackData = [
         [
-            { startTime: 2.000000, endTime: 3.000000 },
-            { startTime: 3.000000, endTime: 4.000000 }
+            { startTime: 1.000000, endTime: 2.000000 },
+            { startTime: 2.000000, endTime: 3.000000 }
         ],
         [
-            { startTime: 5.000000, endTime: 8.000000 },
-            { startTime: 9.000000, endTime: 10.000000 }
+            { startTime: 5.000000, endTime: 6.000000 },
+            { startTime: 6.000000, endTime: 7.000000 }
+        ],
+        [
+            { startTime: 8.000000, endTime: 9.000000 },
+            { startTime: 9.000000, endTime: 10.000000 },
+            { startTime: 10.000000, endTime: 11.000000 },
         ],
         [
             // no annotations
@@ -40,9 +45,6 @@ const staticTracks = (() => {
         [
             { startTime: 12.000000, endTime: 14.000000 },
             { startTime: 17.000000, endTime: 19.000000 }
-        ],
-        [
-            // no annotations  
         ]
     ]
 

@@ -17,17 +17,17 @@ describe('DisplayManager', () => {
     describe('searchForAnnotations', () => {
         test('finds the correct annotation to show based on the timestamp', () => {
             const { annotationToShow } = displayManager.searchForAnnotations(2.5);
-            const expectedAnnotation = staticTracks[0][0];
+            const expectedAnnotation = staticTracks[0][1];
         
             expect(annotationToShow.startTime).toEqual(expectedAnnotation.startTime);
             expect(annotationToShow.endTime).toBe(expectedAnnotation.endTime);
         });
     
         test('finds the correct annotation to hide based on the timestamp', () => {
-            displayManager.currentAnnotation = staticTracks[0][0];
+            displayManager.currentAnnotation = staticTracks[0][1];
     
-            const { annotationToHide } = displayManager.searchForAnnotations(3);
-            const expectedAnnotation = staticTracks[0][0];
+            const { annotationToHide } = displayManager.searchForAnnotations(4);
+            const expectedAnnotation = staticTracks[0][1];
         
             expect(annotationToHide.startTime).toEqual(expectedAnnotation.startTime);
             expect(annotationToHide.endTime).toBe(expectedAnnotation.endTime);
@@ -75,7 +75,7 @@ describe('DisplayManager', () => {
         test('find the annotation based on the currentTime', () => {
             const currentTrack = staticTracks[0];
             const nextTrack = staticTracks[1];
-            const { currentAnnotation } = findAnnotation(2.5, currentTrack, nextTrack);
+            const { currentAnnotation } = findAnnotation(1.5, currentTrack, nextTrack);
             const expectedAnnotation = staticTracks[0][0];
 
             expect(currentAnnotation).toEqual(expectedAnnotation);
@@ -94,7 +94,7 @@ describe('DisplayManager', () => {
     describe('getLastAnnotationEndTime', () => {
         test('finds the start time of the very first annotation in a series of tracks', () => {
             const endTime = getLastAnnotationEndTime(staticTracks);
-            const expectedAnnotation = staticTracks[3][1];
+            const expectedAnnotation = staticTracks[4][1];
             
             expect(endTime).toEqual(expectedAnnotation.endTime);
         });
